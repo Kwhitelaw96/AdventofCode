@@ -39,7 +39,20 @@ public class DataController {
 		//comparing
 		for(int s =0; s<sonars.size();s++) {
 			if(s != sonars.size()-1) {
-				int status = (Integer.compare(sonars.get(s+1).getDistancceRead(), sonars.get(s).getDistancceRead()));
+				int windowA=0;
+				int windowB=0;
+				for(int i=0;i<3;i++) {
+					try {
+						windowA += sonars.get(s+i).getDistancceRead();
+						windowB += sonars.get(s+(i+1)).getDistancceRead();
+					}catch(Exception e) {
+						System.out.println("Not enough to check");
+						break;
+					}
+					
+				}
+				
+				int status = (Integer.compare(windowB, windowA));
 				switch (status) {
 				
 				case 0:
