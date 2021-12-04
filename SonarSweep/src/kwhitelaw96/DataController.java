@@ -10,11 +10,6 @@ import java.util.List;
 
 public class DataController {
 	
-	public static void main(String...args) {
-		
-		
-	}
-	
 	public List<SonarReading> readSonarFromCSV(String fileName){
 		List<SonarReading> sonars = new ArrayList<>();
 		Path pathToFile = Paths.get(fileName);
@@ -35,23 +30,41 @@ public class DataController {
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
-		return outPutReading(sonars);
-	}
-	public static List<SonarReading> outPutReading(List<SonarReading> sonars2) {
+		return compareDistance(sonars);
+	}//end readSonarFromCSV
+	
+	public static List<SonarReading> compareDistance(List<SonarReading> sonars2){
 		List<SonarReading> sonars = sonars2;
-		
-		//output
-		for(SonarReading s: sonars) {
-			System.out.println(s);
+		int largerCnt = 0;
+		//comparing
+		for(int s =0; s<sonars.size();s++) {
+			if(s != sonars.size()-1) {
+				int status = (Integer.compare(sonars.get(s+1).getDistancceRead(), sonars.get(s).getDistancceRead()));
+				switch (status) {
+				
+				case 0:
+					System.out.printf("Sonar reading: %d  unchanged.\n",sonars.get(s+1).getDistancceRead());
+					break;
+				case 1:
+					largerCnt++;
+					System.out.printf("Sonar reading: %d  increased.\n",sonars.get(s+1).getDistancceRead());
+					break;
+				case -1:
+					System.out.printf("Sonar reading: %d  decreased.\n",sonars.get(s+1).getDistancceRead());
+				}
+			}
+			
 		}
+		System.out.printf("Total measurments that were larger: %d", largerCnt);
 		return sonars;
-	}
+	}//end compareDistance
+	
 	private static SonarReading createSonar(String[] metadata) {
 		int sonarDistance = Integer.parseInt(metadata[0]);
 		
 		//return 
 		return new SonarReading(sonarDistance);
-	}
+	}//end createSonar
 	
 	
 	
