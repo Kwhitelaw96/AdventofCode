@@ -36,38 +36,41 @@ public class DataController {
 	public static List<SonarReading> compareDistance(List<SonarReading> sonars2){
 		List<SonarReading> sonars = sonars2;
 		int largerCnt = 0;
+		boolean stopLoop = false;
 		//comparing
 		for(int s =0; s<sonars.size();s++) {
-			if(s != sonars.size()-1) {
-				int windowA=0;
-				int windowB=0;
-				for(int i=0;i<3;i++) {
-					try {
-						windowA += sonars.get(s+i).getDistancceRead();
-						windowB += sonars.get(s+(i+1)).getDistancceRead();
-					}catch(Exception e) {
-						System.out.println("Not enough to check");
-						break;
-					}
-					
-				}
-				
-				int status = (Integer.compare(windowB, windowA));
-				switch (status) {
-				
-				case 0:
-					System.out.printf("Sonar reading: %d  unchanged.\n",sonars.get(s+1).getDistancceRead());
-					break;
-				case 1:
-					largerCnt++;
-					System.out.printf("Sonar reading: %d  increased.\n",sonars.get(s+1).getDistancceRead());
-					break;
-				case -1:
-					System.out.printf("Sonar reading: %d  decreased.\n",sonars.get(s+1).getDistancceRead());
-				}
-			}
-			
-		}
+			if(stopLoop) {
+				break;
+			}else {
+				if(s != sonars.size()-1 || !stopLoop) {
+					int windowA=0;
+					int windowB=0;
+					for(int i=0;i<3;i++) {
+						try {
+							windowA += sonars.get(s+i).getDistancceRead();
+							windowB += sonars.get(s+(i+1)).getDistancceRead();
+						}catch(Exception e) {
+							System.out.println("Not enough data to check");
+							stopLoop =true;
+							break;
+						}
+						int status = (Integer.compare(windowB, windowA));
+						switch (status) {
+						
+						case 0:
+							System.out.printf("Sonar reading: %d  unchanged.\n",windowB);
+							break;
+						case 1:
+							largerCnt++;
+							System.out.printf("Sonar reading: %d  increased.\n",windowB);
+							break;
+						case -1:
+							System.out.printf("Sonar reading: %d  decreased.\n",windowB);
+						}//end switch
+					}//inner loop
+				}//inner if statement loop	
+			}//end else (run until stopLoop is true
+		}//end outter loop
 		System.out.printf("Total measurments that were larger: %d", largerCnt);
 		return sonars;
 	}//end compareDistance
