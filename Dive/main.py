@@ -2,14 +2,13 @@
 # Commands - Forward, Down, Up
 # Horizontal * Depth
 import csv
-import numpy as np
 
 navlist = []
 horizontal = 0
 vertical = 0
 depth = 0
 
-with open('navigation.csv','r') as file:
+with open('navigation.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         navlist.append(row)
