@@ -42,7 +42,7 @@ public class DataController {
 			if(stopLoop) {
 				break;
 			}else {
-				if(s != sonars.size()-1 || !stopLoop) {
+				if(s != sonars.size()-1 && !stopLoop) {
 					int windowA=0;
 					int windowB=0;
 					for(int i=0;i<3;i++) {
@@ -50,13 +50,14 @@ public class DataController {
 							windowA += sonars.get(s+i).getDistancceRead();
 							windowB += sonars.get(s+(i+1)).getDistancceRead();
 						}catch(Exception e) {
-							System.out.println("Not enough data to check");
+							System.out.println("Not enough to check");
 							stopLoop =true;
 							break;
-						}
+						}//end try/catch
+					}//end inner loop
+					if(!stopLoop) {
 						int status = (Integer.compare(windowB, windowA));
 						switch (status) {
-						
 						case 0:
 							System.out.printf("Sonar reading: %d  unchanged.\n",windowB);
 							break;
@@ -66,10 +67,10 @@ public class DataController {
 							break;
 						case -1:
 							System.out.printf("Sonar reading: %d  decreased.\n",windowB);
-						}//end switch
-					}//inner loop
-				}//inner if statement loop	
-			}//end else (run until stopLoop is true
+						}//end switch	
+					}//end if for comparing inner loop
+				}//end if inner loop	
+			}//end else outter loop
 		}//end outter loop
 		System.out.printf("Total measurments that were larger: %d", largerCnt);
 		return sonars;
